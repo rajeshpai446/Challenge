@@ -1,0 +1,19 @@
+variables:
+  - name: agent_pool
+    value: #Agent pool in the devops
+
+pool: $(agent_pool)
+
+stages:
+  - stage:
+    jobs:
+      - job:
+	steps:
+	  - task:Bash@3
+	    env:
+	      ARM_USE_MSI: true
+	      ARM_SUBSCRIPTION_ID: #SERVICE CONNECTION IN DEVOPS
+	    
+            terraform init
+            terraform plan -out=tfplan -input=false
+	    terraform apply -input=false -auto-approve tfplan

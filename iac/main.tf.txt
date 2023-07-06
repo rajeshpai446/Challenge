@@ -1,0 +1,33 @@
+locals {
+  location = "eastus2"
+  env = "nprd"
+  tags = {
+    created_by = ""
+    env = "NPRD"
+  }
+}
+
+terraform {
+  backend "azurerm" {
+#details for storing terraform state files. preferrable storage container
+  }
+}
+
+provider "azurerm" {
+  version	  = "~>2.78.0"
+}
+
+module "core-infra" {
+  source = "../Modules/core"
+  location = local.location
+  tags = local.tags
+}
+
+module "vm" {
+  source = "../Modules/vm"
+  location = local.location
+  tags = local.tags
+  resource_group = module.core-infra.resource_group
+  vnet_id = module.core-infra.resource_group
+  subnet_ple_id = module.core-infra.subnet_ple_id
+}
